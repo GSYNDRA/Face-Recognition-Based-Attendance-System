@@ -21,7 +21,6 @@ face_reco_model = dlib.face_recognition_model_v1("data/data_dlib/dlib_face_recog
 
 
 #  Return 128D features for single image
-
 def return_128d_features(path_img):
     img_rd = cv2.imread(path_img)
     faces = detector(img_rd, 1)

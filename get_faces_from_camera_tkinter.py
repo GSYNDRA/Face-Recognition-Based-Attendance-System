@@ -8,6 +8,8 @@ import logging
 import tkinter as tk
 from tkinter import font as tkFont
 from PIL import Image, ImageTk
+import mysql.connector
+from mysql.connector import Error
 
 # Use frontal face detector of Dlib
 detector = dlib.get_frontal_face_detector()
@@ -25,7 +27,7 @@ class Face_Register:
         self.win.title("Face Register")
 
         # PLease modify window size here if needed
-        self.win.geometry("1000x500")
+        self.win.geometry("1200x600")
 
         # GUI left part
         self.frame_left_camera = tk.Frame(self.win)
@@ -39,6 +41,8 @@ class Face_Register:
         self.label_fps_info = tk.Label(self.frame_right_info, text="")
         self.input_name = tk.Entry(self.frame_right_info)
         self.input_name_char = ""
+        self.input_id = tk.Entry(self.frame_right_info)
+        self.input_id_number = ""
         self.label_warning = tk.Label(self.frame_right_info)
         self.label_face_cnt = tk.Label(self.frame_right_info, text="Faces in current frame: ")
         self.log_all = tk.Label(self.frame_right_info)
@@ -125,10 +129,15 @@ class Face_Register:
         tk.Label(self.frame_right_info, text="Name: ").grid(row=8, column=0, sticky=tk.W, padx=5, pady=0)
         self.input_name.grid(row=8, column=1, sticky=tk.W, padx=0, pady=2)
 
-        tk.Button(self.frame_right_info,
-                  text='Input',
-                  command=self.GUI_get_input_name).grid(row=8, column=2, padx=5)
+        # Input for ID (added beside Name input)
+        tk.Label(self.frame_right_info, text="ID: ").grid(row=8, column=2, sticky=tk.W, padx=5, pady=0)
+        self.input_id.grid(row=8, column=3, sticky=tk.W, padx=0, pady=2)
 
+        # tk.Button(self.frame_right_info,
+        #           text='Input',
+        #           command=self.GUI_get_input_name).grid(row=8, column=2, padx=5)
+        # Button to submit Name and ID
+        tk.Button(self.frame_right_info,text='Input',command=self.GUI_get_input_name).grid(row=8, column=4, padx=5)
         # Step 3: Save current face in frame
         tk.Label(self.frame_right_info,
                  font=self.font_step_title,
