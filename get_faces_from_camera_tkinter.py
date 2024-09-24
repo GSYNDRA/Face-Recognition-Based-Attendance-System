@@ -179,7 +179,7 @@ class Face_Register:
             try:
                 cursor = connection.cursor()
 
-                # Chuyển đổi numpy array (hoặc list) thành dạng chuỗi hoặc BLOB để lưu trữ
+                # convert numpy array (or list) into string or BLOB to save
                 feature_vector_str = ','.join(map(str, feature_vector))  # Chuỗi hóa feature vector
                 
                 # Câu lệnh SQL để cập nhật feature_vector
