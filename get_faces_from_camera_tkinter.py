@@ -63,6 +63,7 @@ class Face_Register:
 
         self.path_photos_from_camera = "data/data_faces_from_camera/"
         self.current_face_dir = ""
+
         self.font = cv2.FONT_ITALIC
 
         # Current frame and face ROI position
@@ -126,7 +127,7 @@ class Face_Register:
                 print("reject")
                 return False
         return False
-    
+
     def GUI_get_input_name(self):
         self.input_name_char = self.input_name.get()
         #  Get ID from input => check if it is number or not ?
@@ -146,30 +147,67 @@ class Face_Register:
             self.label_warning['text'] = f"Student {self.input_name_char} with ID {self.input_id_number} doesn't exist!"
             self.label_warning['fg'] = 'red'
  
-    def extract_features(self):
+    # def extract_feature(self):
+    #     logging.basicConfig(level=logging.INFO)
+    #     #  Get the order of latest person
+    #     person_list = os.listdir("data/data_faces_from_camera/")
+    #     print(person_list[-1])
+    #     person_list.sort()
+
+    #     with open("data/features_all.csv", "w", newline="") as csvfile:
+    #         writer = csv.writer(csvfile)
+    #         for person in person_list:
+    #             # Get the mean/average features of face/personX, it will be a list with a length of 128D
+    #             logging.info("%sperson_%s", path_images_from_camera, person)
+    #             features_mean_personX = self.return_features_mean_personX(path_images_from_camera + person)
+
+    #             if len(person.split('_', 2)) == 2:
+    #                 # "person_x"
+    #                 person_name = person
+    #             else:
+    #                 # "person_x_tom"
+    #                 person_name = person.split('_', 2)[-1]
+    #             features_mean_personX = np.insert(features_mean_personX, 0, person_name, axis=0)
+    #             # features_mean_personX will be 129D, person name + 128 features
+    #             writer.writerow(features_mean_personX)
+    #             logging.info('\n')
+    #         logging.info("Save all the features of faces registered into: data/features_all.csv")
+
+    def update_feature_vector(self, student_id, feature_vector):
+        connection = self.connect_to_database()
+        if connection:
+            try:
+                cursor = connection.cursor()
+
+                # Chuyển đổi numpy array (hoặc list) thành dạng chuỗi hoặc BLOB để lưu trữ
+                feature_vector_str = ','.join(map(str, feature_vector))  # Chuỗi hóa feature vector
+                
+                # Câu lệnh SQL để cập nhật feature_vector
+                query = "UPDATE Student SET feature_vector = %s WHERE student_id = %s"
+                
+                # Thực thi câu lệnh SQL
+                cursor.execute(query, (feature_vector_str, student_id))
+                connection.commit()  # Xác nhận thay đổi
+                
+                print(f"Updated feature vector for student ID: {student_id}")
+            except Error as e:
+                print(f"Failed to update feature vector: {e}")
+            finally:
+                cursor.close()
+                connection.close()
+        else:
+            print("Connection to the database failed.")
+
+    def extract_feature(self):
         logging.basicConfig(level=logging.INFO)
-        #  Get the order of latest person
         person_list = os.listdir("data/data_faces_from_camera/")
-        person_list.sort()
+        
+        # Lấy các đặc trưng trung bình của người cụ thể
+        features_mean_personX = self.return_features_mean_personX(path_images_from_camera +person_list[-1])
 
-        with open("data/features_all.csv", "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            for person in person_list:
-                # Get the mean/average features of face/personX, it will be a list with a length of 128D
-                logging.info("%sperson_%s", path_images_from_camera, person)
-                features_mean_personX = self.return_features_mean_personX(path_images_from_camera + person)
+        # Bây giờ, hãy lưu features_mean_personX vào cơ sở dữ liệu
+        self.update_feature_vector(self.input_id_number, features_mean_personX)
 
-                if len(person.split('_', 2)) == 2:
-                    # "person_x"
-                    person_name = person
-                else:
-                    # "person_x_tom"
-                    person_name = person.split('_', 2)[-1]
-                features_mean_personX = np.insert(features_mean_personX, 0, person_name, axis=0)
-                # features_mean_personX will be 129D, person name + 128 features
-                writer.writerow(features_mean_personX)
-                logging.info('\n')
-            logging.info("Save all the features of faces registered into: data/features_all.csv")
 
     #  Return 128D features for single image
     def return_128d_features(self, path_img):
@@ -277,7 +315,7 @@ class Face_Register:
         # Button to extract features (added beside Save current face)
         tk.Button(self.frame_right_info,
               text='Extract features',
-              command=self.extract_features).grid(row=10, column=1, padx=5, pady=2)
+              command=self.extract_feature).grid(row=10, column=1, padx=5, pady=2)
         # Show log in GUI
         self.log_all.grid(row=11, column=0, columnspan=20, sticky=tk.W, padx=5, pady=20)
 
