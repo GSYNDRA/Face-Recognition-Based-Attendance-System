@@ -78,6 +78,64 @@ class Face_Register:
         self.cap = cv2.VideoCapture(0)  # Get video stream from camera
 
         # self.cap = cv2.VideoCapture("test.mp4")   # Input local video
+    def connect_to_database(self):
+        # """connect with database MySQL"""
+        try:
+            connection = mysql.connector.connect(
+                host='127.0.0.1',  # address host of MySQL
+                database='studentdb',  # name of database
+                user='user',  # Username of MySQL
+                password='user',  # Password of MySQL
+                port='3309',
+                raise_on_warnings=True  # keep informed if there's error 
+            )
+            # Database connection configuration
+             # Database connection configuration
+            if connection.is_connected():
+                print("Success! Connected to MySQL database.")
+                return connection
+        except Error as e:
+            print(f"fail to connect with MySQL database: {e}")
+            return None
+
+    def check_student_exists(self, name, student_id):
+        # "Check the student exist in student table or not"
+        connection = self.connect_to_database()
+        if connection:
+            cursor = connection.cursor()
+            query = "SELECT * FROM Student WHERE name = %s AND student_id = %s"
+            cursor.execute(query, (name, student_id))
+            result = cursor.fetchone()
+            cursor.close()
+            connection.close()
+
+            if result:
+                print("receive")
+                return True
+            else:
+                print("reject")
+                return False
+        return False
+    
+    def GUI_get_input_name(self):
+        self.input_name_char = self.input_name.get()
+        #  Get ID from input => check if it is number or not ?
+        try:
+            self.input_id_number = int(self.input_id.get())  # convert into int
+        except ValueError:
+            self.log_all["text"] = "ID must be a number!"  # Display the error if ID is not a number 
+            return
+        #Check the student exist in database or not ?
+        student_exists = self.check_student_exists(self.input_name_char, self.input_id_number)
+
+        if (student_exists == True):
+            self.create_face_folder()  # if existed => create folder
+            self.label_cnt_face_in_database['text'] = str(self.existing_faces_cnt)
+        else:
+            #Display the notification if the student doesn't exist
+            self.label_warning['text'] = f"Student {self.input_name_char} with ID {self.input_id_number} doesn't exist!"
+            self.label_warning['fg'] = 'red'
+ 
 
     #  Delete old face folders
     def GUI_clear_data(self):
@@ -90,11 +148,6 @@ class Face_Register:
         self.label_cnt_face_in_database['text'] = "0"
         self.existing_faces_cnt = 0
         self.log_all["text"] = "Face images and `features_all.csv` removed!"
-
-    def GUI_get_input_name(self):
-        self.input_name_char = self.input_name.get()
-        self.create_face_folder()
-        self.label_cnt_face_in_database['text'] = str(self.existing_faces_cnt)
 
     def GUI_info(self):
         tk.Label(self.frame_right_info,
