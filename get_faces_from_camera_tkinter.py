@@ -8,6 +8,7 @@ import logging
 import tkinter as tk
 from tkinter import font as tkFont
 from PIL import Image, ImageTk
+import subprocess
 import mysql.connector
 from mysql.connector import Error
 
@@ -136,6 +137,13 @@ class Face_Register:
             self.label_warning['text'] = f"Student {self.input_name_char} with ID {self.input_id_number} doesn't exist!"
             self.label_warning['fg'] = 'red'
  
+    def extract_features(self):
+        try:
+            # call subprocess to run file features_extraction_to_csv.py
+            subprocess.run(['python', 'features_extraction_to_csv.py'], check=True)
+            print("Feature extraction completed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error occurred while extracting features: {e}")
 
     #  Delete old face folders
     def GUI_clear_data(self):
@@ -199,7 +207,10 @@ class Face_Register:
         tk.Button(self.frame_right_info,
                   text='Save current face',
                   command=self.save_current_face).grid(row=10, column=0, columnspan=3, sticky=tk.W)
-
+        # Button to extract features (added beside Save current face)
+        tk.Button(self.frame_right_info,
+              text='Extract features',
+              command=self.extract_features).grid(row=10, column=1, padx=5, pady=2)
         # Show log in GUI
         self.log_all.grid(row=11, column=0, columnspan=20, sticky=tk.W, padx=5, pady=20)
 
