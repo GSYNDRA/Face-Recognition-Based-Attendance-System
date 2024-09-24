@@ -185,9 +185,9 @@ class Face_Register:
                 # query SQL to update feature_vector
                 query = "UPDATE Student SET feature_vector = %s WHERE student_id = %s"
                 
-                # Thực thi câu lệnh SQL
+                #execute SQL query
                 cursor.execute(query, (feature_vector_str, student_id))
-                connection.commit()  # Xác nhận thay đổi
+                connection.commit()  # commit change
                 
                 print(f"Updated feature vector for student ID: {student_id}")
             except Error as e:
@@ -202,10 +202,10 @@ class Face_Register:
         logging.basicConfig(level=logging.INFO)
         person_list = os.listdir("data/data_faces_from_camera/")
         
-        # Lấy các đặc trưng trung bình của người cụ thể
+        # get mean feature vector of identified person 
         features_mean_personX = self.return_features_mean_personX(path_images_from_camera +person_list[-1])
 
-        # Bây giờ, hãy lưu features_mean_personX vào cơ sở dữ liệu
+        # now, save features_mean_personX into database
         self.update_feature_vector(self.input_id_number, features_mean_personX)
 
 
