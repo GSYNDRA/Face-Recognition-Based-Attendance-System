@@ -180,9 +180,9 @@ class Face_Register:
                 cursor = connection.cursor()
 
                 # convert numpy array (or list) into string or BLOB to save
-                feature_vector_str = ','.join(map(str, feature_vector))  # Chuỗi hóa feature vector
+                feature_vector_str = ','.join(map(str, feature_vector))  # string of feature vector
                 
-                # Câu lệnh SQL để cập nhật feature_vector
+                # query SQL to update feature_vector
                 query = "UPDATE Student SET feature_vector = %s WHERE student_id = %s"
                 
                 # Thực thi câu lệnh SQL
