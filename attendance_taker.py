@@ -155,8 +155,8 @@ class Face_Recognizer:
                                  0.8, (255, 190, 0),
                                  1,
                                  cv2.LINE_AA)
+            
     # insert data in database
-
     def attendance(self, name):
         current_date = datetime.datetime.now().strftime('%Y-%m-%d')
         conn = sqlite3.connect("attendance.db")
@@ -216,7 +216,7 @@ class Face_Recognizer:
                             self.current_frame_face_centroid_list.append(
                                 [int(faces[k].left() + faces[k].right()) / 2,
                                  int(faces[k].top() + faces[k].bottom()) / 2])
-
+                            # khúc này đổi thành image của mình để khoanh vùng khuôn mặt
                             img_rd = cv2.rectangle(img_rd,
                                                    tuple([d.left(), d.top()]),
                                                    tuple([d.right(), d.bottom()]),
@@ -227,6 +227,7 @@ class Face_Recognizer:
                         self.centroid_tracker()
 
                     for i in range(self.current_frame_face_cnt):
+                        # chỉnh lại khi nhận diện sẽ hiện bên hình vuông
                         # 6.2 Write names under ROI
                         img_rd = cv2.putText(img_rd, self.current_frame_face_name_list[i],
                                              self.current_frame_face_position_list[i], self.font, 0.8, (0, 255, 255), 1,
@@ -286,7 +287,7 @@ class Face_Recognizer:
                             # 6.2.2.4 / Find the one with minimum e distance
                             similar_person_num = self.current_frame_face_X_e_distance_list.index(
                                 min(self.current_frame_face_X_e_distance_list))
-
+                            # chỉnh xuống 0.3 or 0.35 nếu muốn tắng độ chính xác
                             if min(self.current_frame_face_X_e_distance_list) < 0.4:
                                 self.current_frame_face_name_list[k] = self.face_name_known_list[similar_person_num]
                                 logging.debug("  Face recognition result: %s",
