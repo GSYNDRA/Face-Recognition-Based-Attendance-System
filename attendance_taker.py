@@ -147,7 +147,7 @@ class Face_Recognizer:
         cv2.putText(img_rd, "Faces:  " + str(self.current_frame_face_cnt), (20, 160), self.font, 0.8, (0, 255, 0), 1,
                     cv2.LINE_AA)
         cv2.putText(img_rd, "Q: Quit", (20, 450), self.font, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
-
+        # để ghi số thứ tự khuôn mặt trong khung hình 
         for i in range(len(self.current_frame_face_name_list)):
             img_rd = cv2.putText(img_rd, "Face_" + str(i + 1), tuple(
                 [int(self.current_frame_face_centroid_list[i][0]), int(self.current_frame_face_centroid_list[i][1])]),
@@ -217,10 +217,10 @@ class Face_Recognizer:
                                 [int(faces[k].left() + faces[k].right()) / 2,
                                  int(faces[k].top() + faces[k].bottom()) / 2])
                             # khúc này đổi thành image của mình để khoanh vùng khuôn mặt
-                            img_rd = cv2.rectangle(img_rd,
-                                                   tuple([d.left(), d.top()]),
-                                                   tuple([d.right(), d.bottom()]),
-                                                   (255, 255, 255), 2)
+                            # img_rd = cv2.rectangle(img_rd,
+                            #                        tuple([d.left(), d.top()]),
+                            #                        tuple([d.right(), d.bottom()]),
+                            #                        (255, 255, 255), 2)
 
                     #  Multi-faces in current frame, use centroid-tracker to track
                     if self.current_frame_face_cnt != 1:
