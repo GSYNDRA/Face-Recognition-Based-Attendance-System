@@ -7,6 +7,7 @@ import time
 import logging
 import sqlite3
 import datetime
+import cvzone
 
 
 # Dlib  / Use frontal face detector of Dlib
@@ -218,10 +219,13 @@ class Face_Recognizer:
                             [int(faces[0].left() + faces[0].right()) / 2,
                              int(faces[0].top() + faces[0].bottom()) / 2])
                             # khúc này đổi thành image của mình để khoanh vùng khuôn mặt
-                        img_rd = cv2.rectangle(img_rd,
-                                                tuple([faces[0].left(), faces[0].top()]),
-                                                tuple([faces[0].right(), faces[0].bottom()]),
-                                                (255, 255, 255), 2)
+                        # img_rd = cv2.rectangle(img_rd,
+                        #                         tuple([faces[0].left(), faces[0].top()]),
+                        #                         tuple([faces[0].right(), faces[0].bottom()]),
+                        #                         (255, 255, 255), 2)
+                        bbox = (faces[0].left(), faces[0].top(), faces[0].right() - faces[0].left(), faces[0].bottom() - faces[0].top())
+                        img_rd = cvzone.cornerRect(img_rd, bbox, rt=0, colorR=(255, 255, 255))
+
                         img_rd = cv2.putText(img_rd, self.current_frame_face_name_list[0],
                                          self.current_frame_face_position_list[0], self.font, 0.8, (0, 255, 255), 1,
                                          cv2.LINE_AA)
