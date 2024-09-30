@@ -7,7 +7,7 @@ import time
 import logging
 import sqlite3
 import datetime
-
+import cvzone
 
 # Dlib  / Use frontal face detector of Dlib
 detector = dlib.get_frontal_face_detector()
@@ -224,17 +224,20 @@ class Face_Recognizer:
                             #                        tuple([d.left(), d.top()]),
                             #                        tuple([d.right(), d.bottom()]),
                             #                        (255, 255, 255), 2)
+                            bbox = (55+faces[k].left(),162+faces[k].top(), faces[k].right() - faces[k].left(), faces[k].bottom() - faces[k].top())
+                            cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
 
                     #  Multi-faces in current frame, use centroid-tracker to track
                     if self.current_frame_face_cnt != 1:
                         self.centroid_tracker()
 
-                    for i in range(self.current_frame_face_cnt):
-                        # chỉnh lại khi nhận diện sẽ hiện bên hình vuông
-                        # 6.2 Write names under ROI
-                        img_rd = cv2.putText(img_rd, self.current_frame_face_name_list[i],
-                                             self.current_frame_face_position_list[i], self.font, 0.8, (0, 255, 255), 1,
-                                             cv2.LINE_AA)
+                    # for i in range(self.current_frame_face_cnt):
+                    #     # chỉnh lại khi nhận diện sẽ hiện bên hình vuông
+                    #     # 6.2 Write names under ROI
+                    #     img_rd = cv2.putText(self.imgBackground, self.current_frame_face_name_list[i],
+                    #                          self.current_frame_face_position_list[i], self.font, 0.8, (0, 255, 255), 1,
+                    #                          cv2.LINE_AA)
+                        
                     self.draw_note(img_rd)
 
                 # 6.2  If cnt of faces changes, 0->1 or 1->0 or ...
@@ -313,8 +316,10 @@ class Face_Recognizer:
                     break
 
                 self.update_fps()
-                cv2.namedWindow("camera", 1)
-                cv2.imshow("camera", self.imgBackground)
+                # cv2.namedWindow("camera", 1)
+                # cv2.imshow("camera", img_rd)
+                # cv2.imshow("Webcam", img_rd)
+                cv2.imshow("Face Attendance", self.imgBackground)
 
                 logging.debug("Frame ends\n\n")
 
@@ -325,7 +330,7 @@ class Face_Recognizer:
         # cap = cv2.VideoCapture("video.mp4")  # Get video stream from video file
         cap = cv2.VideoCapture(0)              # Get video stream from camera
         cap.set(3, 640)
-        cap.set(4, 480)
+        cap.set(4, 490)
         self.process(cap)
 
         cap.release()
