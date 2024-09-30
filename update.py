@@ -179,6 +179,7 @@ class Face_Recognizer:
 
     #  Face detection and recognition wit OT from input video stream
     def process(self, stream):
+        
         # 1.  Get faces known from "features.all.csv"
         if self.get_face_database():
             while stream.isOpened():
@@ -327,8 +328,7 @@ class Face_Recognizer:
     def run(self):
         # cap = cv2.VideoCapture("video.mp4")  # Get video stream from video file
         cap = cv2.VideoCapture(0)              # Get video stream from camera
-        self.process(cap)
-
+        
         cap.release()
         cv2.destroyAllWindows()
     
