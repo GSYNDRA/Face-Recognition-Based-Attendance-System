@@ -318,7 +318,6 @@ class Face_Recognizer:
                 self.update_fps()
                 # cv2.namedWindow("camera", 1)
                 # cv2.imshow("camera", img_rd)
-                # cv2.imshow("Webcam", img_rd)
                 cv2.imshow("Face Attendance", self.imgBackground)
 
                 logging.debug("Frame ends\n\n")
