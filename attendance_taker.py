@@ -225,7 +225,11 @@ class Face_Recognizer:
                             #                        tuple([d.right(), d.bottom()]),
                             #                        (255, 255, 255), 2)
                             bbox = (55+faces[k].left(),162+faces[k].top(), faces[k].right() - faces[k].left(), faces[k].bottom() - faces[k].top())
-                            cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
+                            if (55 <= bbox[0] <= 55 + 640 and   # Kiểm tra tọa độ x (bbox nằm trong chiều ngang của nền)
+                            162 <= bbox[1] <= 162 + 480 and     # Kiểm tra tọa độ y (bbox nằm trong chiều dọc của nền)
+                            bbox[2] <= 640 and                  # Chiều rộng của bbox không vượt quá chiều rộng của camera
+                            bbox[3] <= 480):                    # Chiều cao của bbox không vượt quá chiều cao của camera
+                                cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
 
                     #  Multi-faces in current frame, use centroid-tracker to track
                     if self.current_frame_face_cnt != 1:

@@ -38,6 +38,8 @@ conn.close()
 class Face_Recognizer:
     def __init__(self):
         self.font = cv2.FONT_ITALIC
+        # GUI for background
+        self.imgBackground = cv2.imread('resources/background.png')
 
         # FPS
         self.frame_time = 0
@@ -185,10 +187,20 @@ class Face_Recognizer:
                 self.frame_cnt += 1
                 logging.debug("Frame " + str(self.frame_cnt) + " starts")
                 flag, img_rd = stream.read()
+
+                self.imgBackground[162:162+480,55:55+640] = img_rd
                 kk = cv2.waitKey(1)
 
                 # 2.  Detect faces for frame X
                 faces = detector(img_rd, 0)
+                if(len(faces) > 0):
+                    bbox = (55+faces[0].left(), 162+faces[0].top(), faces[0].right() - faces[0].left(), faces[0].bottom() - faces[0].top())
+                    img_rd = cvzone.cornerRect(img_rd, bbox, rt=0, colorR=(255, 255, 255))
+                    if (55 <= bbox[0] <= 55 + 640 and   # Kiểm tra tọa độ x (bbox nằm trong chiều ngang của nền)
+                    162 <= bbox[1] <= 162 + 480 and     # Kiểm tra tọa độ y (bbox nằm trong chiều dọc của nền)
+                    bbox[2] <= 640 and                  # Chiều rộng của bbox không vượt quá chiều rộng của camera
+                    bbox[3] <= 480):                    # Chiều cao của bbox không vượt quá chiều cao của camera
+                        cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
 
                 # 3.  Update cnt for faces in frames
                 self.last_frame_face_cnt = self.current_frame_face_cnt
@@ -223,8 +235,13 @@ class Face_Recognizer:
                         #                         tuple([faces[0].left(), faces[0].top()]),
                         #                         tuple([faces[0].right(), faces[0].bottom()]),
                         #                         (255, 255, 255), 2)
-                        bbox = (faces[0].left(), faces[0].top(), faces[0].right() - faces[0].left(), faces[0].bottom() - faces[0].top())
+                        bbox = (55 + faces[0].left(),162 + faces[0].top(), faces[0].right() - faces[0].left(), faces[0].bottom() - faces[0].top())
                         img_rd = cvzone.cornerRect(img_rd, bbox, rt=0, colorR=(255, 255, 255))
+                        if (55 <= bbox[0] <= 55 + 640 and   # Kiểm tra tọa độ x (bbox nằm trong chiều ngang của nền)
+                        162 <= bbox[1] <= 162 + 480 and     # Kiểm tra tọa độ y (bbox nằm trong chiều dọc của nền)
+                        bbox[2] <= 640 and                  # Chiều rộng của bbox không vượt quá chiều rộng của camera
+                        bbox[3] <= 480):                    # Chiều cao của bbox không vượt quá chiều cao của camera
+                            cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
 
                         img_rd = cv2.putText(img_rd, self.current_frame_face_name_list[0],
                                          self.current_frame_face_position_list[0], self.font, 0.8, (0, 255, 255), 1,
@@ -317,7 +334,7 @@ class Face_Recognizer:
 
                 self.update_fps()
                 cv2.namedWindow("camera", 1)
-                cv2.imshow("camera", img_rd)
+                cv2.imshow("camera", self.imgBackground)
 
                 logging.debug("Frame ends\n\n")
 
@@ -328,6 +345,8 @@ class Face_Recognizer:
         # cap = cv2.VideoCapture("video.mp4")  # Get video stream from video file
         cap = cv2.VideoCapture(0)              # Get video stream from camera
         self.process(cap)
+        cap.set(3, 640)
+        cap.set(4, 490)
 
         cap.release()
         cv2.destroyAllWindows()
