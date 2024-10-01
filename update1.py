@@ -8,6 +8,8 @@ import logging
 import sqlite3
 import datetime
 import cvzone
+import mysql.connector
+from mysql.connector import Error
 
 
 # Dlib  / Use frontal face detector of Dlib
@@ -56,6 +58,7 @@ class Face_Recognizer:
         # / Save the name of faces in the database
         self.face_name_known_list = []
 
+
         #  List to save centroid positions of ROI in frame N-1 and N
         self.last_frame_face_centroid_list = []
         self.current_frame_face_centroid_list = []
@@ -102,6 +105,30 @@ class Face_Recognizer:
             print(f"fail to connect with MySQL database: {e}")
             return None
         
+    #  "features_all.csv"  / Get known faces from "features_all.csv"
+    # def get_face_database(self):
+    #     connection = self.connect_to_database()
+    #     if connection:
+    #         cursor = connection.cursor()
+    #         query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 3"
+    #         # Execute the query
+    #         cursor.execute(query)
+            
+    #         # Fetch all results from the query
+    #         rows = cursor.fetchall()  # Fetch multiple rows
+    #         for row in rows:
+    #             feature_vector_str = row[0]  # Each row is a tuple, get the first element (feature_vector string)
+    #             feature_vector_list = list(map(float, feature_vector_str.split(',')))  
+    #             self.face_features_known_list.append(feature_vector_list)
+    #         print(self.face_features_known_list)
+    #         logging.info("Faces in Database： %d", len(self.face_features_known_list))
+    #         cursor.close()
+    #         connection.close()
+    #         return 1
+    #     else:
+    #         logging.warning("data is not found!")
+    #         return 0
+
     #  "features_all.csv"  / Get known faces from "features_all.csv"
     def get_face_database(self):
         if os.path.exists("data/features_all.csv"):
@@ -331,12 +358,13 @@ class Face_Recognizer:
                             min(self.current_frame_face_X_e_distance_list))
                         # chỉnh xuống 0.3 or 0.35 nếu muốn tắng độ chính xác
                         if min(self.current_frame_face_X_e_distance_list) < 0.4:
+                            # chỉnh lại khúc này thay face_name_known_list connect với database để lấy hình ảnh ra 
                             self.current_frame_face_name_list[0] = self.face_name_known_list[similar_person_num]
                             logging.debug("  Face recognition result: %s",
                                             self.face_name_known_list[similar_person_num])
                                 
                             # Insert attendance record
-                            nam =self.face_name_known_list[similar_person_num]
+                            nam = self.face_name_known_list[similar_person_num]
 
                             print(type(self.face_name_known_list[similar_person_num]))
                             print(nam)
