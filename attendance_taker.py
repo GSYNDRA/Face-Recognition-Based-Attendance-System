@@ -28,6 +28,9 @@ table_name = "attendance"
 create_table_sql = f"CREATE TABLE IF NOT EXISTS {table_name} (name TEXT, time TEXT, date DATE, UNIQUE(name, date))"
 cursor.execute(create_table_sql)
 
+folderModePath = 'Resources/Modes'
+modePathList = os.listdir(folderModePath)
+
 
 # Commit changes and close the connection
 conn.commit()
@@ -37,6 +40,10 @@ conn.close()
 class Face_Recognizer:
     def __init__(self):
         self.font = cv2.FONT_ITALIC
+        
+        self.imgModeList = []
+        for path in modePathList:
+            self.imgModeList.append(cv2.imread(os.path.join(folderModePath, path)))
 
         self.imgBackground = cv2.imread('resources/background.png')
         # FPS
