@@ -11,6 +11,7 @@ import cvzone
 import mysql.connector
 from mysql.connector import Error
 import random
+import base64
 
 
 # Dlib  / Use frontal face detector of Dlib
@@ -158,61 +159,54 @@ class Face_Recognizer:
             self.current_frame_face_name_list[i] = self.last_frame_face_name_list[last_frame_num]
 
     # #  cv2 window / putText on cv2 window do not need
-    # def draw_note(self, img_rd):
-    #     #  / Add some info on windows
-    #     cv2.putText(img_rd, "Frame:  " + str(self.frame_cnt), (20, 100), self.font, 0.8, (0, 255, 0), 1, cv2.LINE_AA)
+    def draw_note(self, img_rd):
+        #  / Add some info on windows
+        cv2.putText(img_rd, "Frame:  " + str(self.frame_cnt), (70, 200), self.font, 0.8, (0, 255, 0), 1, cv2.LINE_AA)
 
-    #     cv2.putText(img_rd, "FPS:    " + str(self.fps.__round__(2)), (20, 130), self.font, 0.8, (0, 255, 0), 1, cv2.LINE_AA)
+        cv2.putText(img_rd, "FPS:    " + str(self.fps.__round__(2)), (70, 230), self.font, 0.8, (0, 255, 0), 1, cv2.LINE_AA)
 
-    #     cv2.putText(img_rd, "Faces:  " + str(self.current_frame_face_cnt), (20, 160), self.font, 0.8, (0, 255, 0), 1, cv2.LINE_AA)
+        cv2.putText(img_rd, "Faces:  " + str(self.current_frame_face_cnt), (70, 260), self.font, 0.8, (0, 255, 0), 1, cv2.LINE_AA)
 
-    #     cv2.putText(img_rd, "Q: Quit", (20, 450), self.font, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
+        cv2.putText(img_rd, "Q: Quit", (70, 620), self.font, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
         
-    def get_ongoing_journey_id(self,connection, bus_id):
-        # Truy vấn database để lấy journey ID
-        cursor = connection.cursor()
-        query = "SELECT journey_id FROM Journey WHERE status = 'ongoing' AND bus_id = %s and LIMIT 1"
-        cursor.execute(query)
-        cursor.execute(query, (bus_id))
-        journey_id = cursor.fetchone()
-        # Trả về journey ID dưới dạng int nếu tìm thấy, ngược lại trả về None
-        return int(journey_id) if journey_id else None
             
-    # insert data in database
-    def attendance(self, time, id, path):
-        connection = self.connect_to_database()
-        if connection:
-            journey_id = self.get_ongoing_journey_id(connection, 2)
-            if not journey_id:
-                print("No active journey found.")
-                return
-        else:
-            logging.warning("fail to connect")
         
     def get_ongoing_journey_id(self,connection, bus_id):
-        # Truy vấn database để lấy journey ID
         cursor = connection.cursor()
         query = "SELECT journey_id FROM Journey WHERE status = 'ongoing' AND bus_id = %s"
         cursor.execute(query, (bus_id,))
         journey_id = cursor.fetchone()
-        # Trả về journey ID dưới dạng int nếu tìm thấy, ngược lại trả về None
-        # Kiểm tra nếu journey_id không phải là None trước khi truy cập phần tử [0]
+        cursor.close()
         if journey_id:
-            return int(journey_id[0])  # Trả về journey ID dưới dạng int nếu có giá trị
+            return int(journey_id[0])  
         else:
-            return None  # Ngược lại trả về None
+            return None  
         
     def get_attendance_by_student_id(self, connection, student_id, journey_id):
         cursor = connection.cursor()
         query = "SELECT attendance_id, status FROM Attendance WHERE journey_id = %s AND student_id = %s"
         cursor.execute(query, (journey_id, student_id))
         attendance_id = cursor.fetchone()
-        # Trả về journey ID dưới dạng int nếu tìm thấy, ngược lại trả về None
-        # Kiểm tra nếu journey_id không phải là None trước khi truy cập phần tử [0]
+        cursor.close()
         if attendance_id:
-            return attendance_id  # Trả về journey ID dưới dạng int nếu có giá trị
+            return attendance_id  
         else:
-            return None  # Ngược lại trả về None
+            return None 
+    
+    def get_info_by_student_id(self, student_id):
+        connection = self.connect_to_database()
+        if connection:
+            cursor = connection.cursor()
+            query = "SELECT name, avatar FROM Student WHERE student_id = %s"
+            cursor.execute(query, (student_id,))
+            infoStudent = cursor.fetchone()
+            cursor.close()
+            connection.close()
+            if infoStudent:
+                return infoStudent  
+            else:
+                return None 
+        
     def create_new_attendance(self, connection, student_id, journey_id, status, boarded, boarded_image):
         cursor = connection.cursor()
         query = """
@@ -221,6 +215,7 @@ class Face_Recognizer:
         """
         cursor.execute(query, (student_id, journey_id, status, boarded, boarded_image))
         connection.commit()
+        cursor.close()
 
     def update_attendance_status(self, connection, attendance_id, status, time, path):
         cursor = connection.cursor()
@@ -231,6 +226,7 @@ class Face_Recognizer:
         """
         cursor.execute(query, (status, time, path, attendance_id))
         connection.commit()
+        cursor.close()
 
 
     def clear_alighted_info(self, connection, attendance_id, status, time, path):
@@ -242,6 +238,7 @@ class Face_Recognizer:
         """
         cursor.execute(query, (status, time, path, attendance_id))
         connection.commit()
+        cursor.close()
 
     # insert data in database
     def attendance(self, time, id, path):
@@ -262,9 +259,10 @@ class Face_Recognizer:
             elif attendance_id[1] == 'alighted':
                 status = 'boarded'
                 self.clear_alighted_info(connection, attendance_id[0], status, time, path)
-
+            connection.close()
         else:
             logging.warning("fail to connect")
+
 
     def save_recognized_face(self, img, person_name):
         # Get the current date
@@ -326,7 +324,7 @@ class Face_Recognizer:
                 self.current_frame_face_centroid_list = []
                 
 
-                # 6.1  if cnt not changes
+                # 6.1  self.current_student_id == self.last_student_id
                 if (self.current_student_id == self.last_student_id) and self.reclassify_interval_cnt <= 100:
                     if self.reclassify_interval_cnt == 1:
                         print("getting data of student")
@@ -335,20 +333,32 @@ class Face_Recognizer:
                         self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[0]
                         print("putText for background with cv2")
                     elif 20 < self.reclassify_interval_cnt <= 60:
-                        # gọi function fetch info của học sinh và putText lên image ở đoạn này
+                        infoStudent = self.get_info_by_student_id(self.current_student_id)
+                        avatar = base64.b64decode(infoStudent[1])
+                        nparr = np.frombuffer(avatar, np.uint8)
+                        imgStudent = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                        imgStudent = cv2.resize(imgStudent, (216, 216))
+                        
                         self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[1]
+                        cv2.putText(self.imgBackground, str(infoStudent[0]), (1006, 550), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255), 1)
+                        cv2.putText(self.imgBackground, str(self.current_student_id), (1006, 493), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255), 1)
+                        self.imgBackground[175:175 + 216, 909:909 + 216] = imgStudent
                         print("showing the info frame of student")
                     elif 60 < self.reclassify_interval_cnt <= 80:
                         self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[2]
                         print("showing checked image")
                     else:
                         self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[0]
+                    self.draw_note(self.imgBackground)
+
                 elif self.reclassify_interval_cnt > 100 and self.countdown >= 0:
                     if 15 < self.countdown <= 50:
                         self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[3]
                     else:
                        self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[0]
                     self.countdown -= 1
+                    self.draw_note(self.imgBackground)
+
                 # 6.2  If cnt of faces changes, 0->1 or 1->0 or ...
                 else:
                     logging.debug("scene 2: / Faces cnt changes in this frame")
@@ -428,7 +438,7 @@ class Face_Recognizer:
                         print("showing activate image and UNKNOWN PERSON")
                         self.imgBackground[44:44 + 633, 808:808 + 414] = self.imgModeList[0]
                         # 7.  / Add note on cv2 window
-                    # self.draw_note(img_rd)
+                    self.draw_note(self.imgBackground)
                     
                 # 8.  'q'  / Press 'q' to exit
                 if kk == ord('q'):

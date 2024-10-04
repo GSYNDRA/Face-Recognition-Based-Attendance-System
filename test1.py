@@ -78,30 +78,30 @@ def get_face_database():
 # with open(image_path, "rb") as image_file:
 #     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
-# # In ra chuỗi Base64
+# In ra chuỗi Base64
 # print(encoded_string)
-# # In ra kết quả
-# # print(feature_vector_array)
-# base64_string = "/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAMAAzAMBIgACEQEDEQH/xAAbAAACAwEBAQAAAAAAAAAAAAAAAwIEBQEGB//EADYQAAICAQMCBAMGBQQDAAAAAAABAgMRBBIhBTETQVFhBiJxFDKBkaGxIzNScuEHQmLBQ2PR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAEC/8QAFhEBAQEAAAAAAAAAAAAAAAAAAAER/9oADAMBAAIRAxEAPwD7iAAAAAAAAAAAAAAAAAELJxrjuk8IQrp2P5VhAWgFRcvNnVJp8lwMAgrIsmQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcYGf1K7bbXBvjbn6nk/8AUOr4k1fw54HwnJx1krF4myyMJ7PPa3jH5np+u1SVcNRD/wAfDXsZ2m1keE2BP4dXxBoOiaLT9Woo1uqrqjG62rVZnKWO+JRSf5ljq/WtToel6zVw6PrZWUVSnCvEJb2l2+WTLNOqWFhj/HTXLX0ZR5X/AE0+MbvjHoduv1ejWmupudclDOySwnlZ+p7Kme5Nenco7qqYbaoQrjnLUEks/gWNBlwnJ5xKXBBaAAAAAAAAAAAAAAAAAAAAAAAAAAAAONpdwOib7o1rHeXoQv1Krj8vLfCKizJ5by2XAnXaZ65Ytk2vTOEUF0CUF/BvlFej5NqKGouGsGPTdfX9y2uS9x8NJ1BrEnUvxZsYOkw1mQ0F7ad16aXlGJrVPEEuOCGDie15QwWQIRnmOfzJJpog6AAAAAAAAAAAAAAAAAAAAAELLI1wcpPhAFlka45k/wDJV3ytblLiK8hOZX2b59vJeg2+Xh0y+hqQVZS8S1pdkNjwIqxGHu+46LAfEmiERiCOnQSJYAXKeOOCKkmyVkE+cCsPd8q4AnuaGVtpbl2FS7DNO004vyYqnQkpLJITJOD47E4S3LKMiYAAAAAAAAAAAAAAABxvC54M26z7Rbx/Lj29/cdrrmkqYvl8y9kLpgih1FZU6pYk4xXmzSitkTB6jbu1UYjQ6L4HwK9fYsQQKfAahUBsSoYkSwRRIUcZCWPInLsLZIISE+L4c13+aSRYkvlKOvbhU5LvFqX6/wCS1WovmQt5i+OxHST3QS9h01kglGSZ0rwlt7j88ZIOgcydAAAAAAAAF3XRpqlZLsv1GPsZOut8fUqqP3KuX7sCMd05b5d5PLLtEOxXqiXKlhFHdTLbUzzEm7Nd9D0PUbFGlmDoYb7p2P1IsaMUOghcVyOgaSmRGxFpDIhE0SOJEiCLINDGiLQgg3wUOpRb09iXdxePrgvyQi+O6P05LVhXTrd1cX6pGl3RiaB7G6/6Xg165bo5MxajYiVM/wDY/wADs0V55i1Jd0VF0CMJqcU12ZIgAAAAAABGru8DTzn5pYX18jMphtS/qfLLHUpZtrr8l87Xr5L/ALF1lirFUS3BYQilD28RLUZHWrmouKEaKGylerF9Sn4uoS9yzX91GVOiNiJix0DSGxGxFRGwCGJHQXY6RXMEZImcYCpdhUvMdJCpIqMyS8HW/wB64NTTyysGf1GONti7xkvyLWlnlIy0uvkTYsjkQmioVpntm632fKLZRm3GSl6F1POMeZB0AAAAAAxtVPfrrP8AjwMq8ikpt6q1+bk/3L2n8ixV2mPBzVT2UsZDiKwUeqWKNWBUYspbtTKXoXanlGZRLO6T85GhTLgi4tRY+DK8WNiyosJjYMrxY6DKHp8Hci0zqZMEgbDJFsDkhUicmKkwitq47qpx9UJ0VmYx55RZs57mZpJ7LJw81Jkaegrlujk7NFfS2LGCy+Soq2j9K80xz3XAi4Zonmp/3MgsgAAAAcYHl6pZ1M/7mamnfCMfOzXWQ9JtfuaumlwIuL+/CRk9Ys+TgvOXBWr032zUrf8Ay4PMvf2BGJXmMUpcNeReplwitr14euug+6m8HdPPjkK0oSHRZThMsQkExZixkZFeMhikVFmMiWSvGRLeEP3HGxW4HMCUmKkwlIVOYUTZj3ydWtk0sKTyaU7CPUNE7+n1WQi3bDlY9CKnpLd2MM01JOJ5zptzfD4xxk2arcrlgSvZPp3NLb/qEXT4f0H9O40+fVsItgcR0AOM6cA8l1JeD1e6PbMty/HH+S9p5/ImJ+LqZVKnXVxbUXssx5LybJaWq+3SKdaTWM9w0uK1NY8y50/imTxy5f8AR57S33SuVk65xqjZ4eZdnL2PQ6N7ZSh6rcgjD+I6vC10bPKyP6ooUz5PQfEOl+0aF2QWZ1Pcvp5nlarV5MLGvXPgsRngzqbMoswmBejMYplOMxqmDFlTJKZWUySmNMWNwbhG8N4MMnMRZYE5FayY0TctzSXLbwehhFRhGOOywYnSafG1G9r5K+fxNfVW+Dp7LPOMW19Qy81pUq7Lovspv9zQqsxJpcor16aVmj8ODTul2fuUul26q+x1umalB7ZqXGGGmtqLPlNHQRxpKs+az+Zj2RnbrIaVL5pLMsPtH1N+CUYqK7LhBKkAAEAAAELqoXVTqtipQmmpJ+aMLp9kunah6HU9ufDm/wDdH/6egfYRqtLTqq9l0VJZyn5r6AZX2S37Y6Z2OzRXcxTlzXLvwael0v2dc2Sm8YzIXptDGmyM/Fts2/dUmsL8u5dAjLtjGUeH69oX03W5iv4FvNb9PVHuX2PN/FKjdfXVPsq8/m/8BYw9PdkvQt4MW2uzTTSnzHyl6linU5WPQjTYjYNjYZsLsjo2hF7eSUykrSXigXN4byorTjvwBanPgrzk5TUYrMpPEV6sX4srJKFccz9EWqtLKmSstf8AE7r/AIhW9odMtLp41rmXeT9WMuqjdXKuazCSwxieeV5nSsMTqFc+m6ZWaaTndKShXv7Rz3/TIvRY0lMp3Tc7p8zbfdmp1DRQ19CqslOG2SlGcHhxa8yGl6dVRJSnKVti7Snjj6ILrnT6HHdqLYpW2eXovQvgAQAAAAAAAAAAAc8wADzfxAs9Riv/AFr92elPN/EKxr6peta/dhYUunxvpxLD9jK1fRrqW50Jtehv6KeIrJoRjGcQtrwW+yriyDi/cbHU4PY6jp9NqxKEWn7GRqfh6uWXU3EGslanJ37T7iepdI1WjdG3E42WbG+23hvP6FrRdJjJJ6iyU212TwiCEb3OSjFNv0XJq6HpOo1PzW/woP17l3Q6WmhLw6ox+iNWp4SRUqGn0VGjrxVBZx9592UtX3kaVkuDL17w8+owlbVf8uP0RI5FYSXodCAAAAAAAAAAP//Z"
-# # Bước 1: Loại bỏ tiền tố không cần thiết
-# # base64_data = base64_string.split(",")[1]
-# # Bước 2: Giải mã chuỗi Base64 thành dữ liệu nhị phân
-# image_data = base64.b64decode(base64_string)
+# In ra kết quả
+# print(feature_vector_array)
+base64_string = "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"
+# Bước 1: Loại bỏ tiền tố không cần thiết
+# base64_data = base64_string.split(",")[1]
+# Bước 2: Giải mã chuỗi Base64 thành dữ liệu nhị phân
+image_data = base64.b64decode(base64_string)
 
-# # Bước 3: Chuyển dữ liệu nhị phân thành mảng NumPy
-# nparr = np.frombuffer(image_data, np.uint8)
+# Bước 3: Chuyển dữ liệu nhị phân thành mảng NumPy
+nparr = np.frombuffer(image_data, np.uint8)
 
-# # Bước 4: Giải mã mảng NumPy thành hình ảnh OpenCV
-# img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+# Bước 4: Giải mã mảng NumPy thành hình ảnh OpenCV
+img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-# # Bước 5: Hiển thị hình ảnh sử dụng OpenCV
-# cv2.imshow("Decoded Image", img)
+# Bước 5: Hiển thị hình ảnh sử dụng OpenCV
+cv2.imshow("Decoded Image", img)
 
-# # Đợi cho tới khi bạn bấm phím bất kỳ để đóng cửa sổ
-# cv2.waitKey(0)
+# Đợi cho tới khi bạn bấm phím bất kỳ để đóng cửa sổ
+cv2.waitKey(0)
 
-# # Đóng tất cả các cửa sổ hiển thị của OpenCV
-# cv2.destroyAllWindows()
+# Đóng tất cả các cửa sổ hiển thị của OpenCV
+cv2.destroyAllWindows()
 # current_time = datetime.datetime.now()
 # current_time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -182,9 +182,23 @@ def attendance(time, id, path):
 
         else:
             logging.warning("fail to connect")
+def get_info_by_student_id(student_id):
+        connection = connect_to_database()
+        if connection:
+            cursor = connection.cursor()
+            query = "SELECT student_id, name, avatar FROM Student WHERE student_id = %s"
+            cursor.execute(query, (student_id,))
+            infoStudent = cursor.fetchone()
+            cursor.close()
+            connection.close()
+            if infoStudent:
+                return infoStudent  
+            else:
+                return None 
+infoStudent = get_info_by_student_id(1)  
+print(infoStudent)
+# current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# image_path = "data/recognized_faces_check_in/1_2024_10_04_16_17_00/1_2024_10_04_16_17_00_realtime_checkin_2024_10_04.png"
 
-current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-image_path = "data/recognized_faces_check_in/1_2024_10_04_16_17_00/1_2024_10_04_16_17_00_realtime_checkin_2024_10_04.png"
-
-attendance(current_time, 1, image_path)
+# attendance(current_time, 1, image_path)
 
