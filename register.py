@@ -25,17 +25,6 @@ predictor = dlib.shape_predictor('data/data_dlib/shape_predictor_68_face_landmar
 #  Use Dlib resnet50 model to get 128D face descriptor
 face_reco_model = dlib.face_recognition_model_v1("data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
 
-def get_latest_folder(path):
-        # Lấy danh sách tất cả folder trong thư mục
-        folders = [f for f in os.listdir(path) if os.path.isdir(os.path.join(path, f))]
-        
-        if folders:
-            # Tìm folder có thời gian sửa đổi mới nhất
-            latest_folder = max(folders, key=lambda f: os.path.getmtime(os.path.join(path, f)))
-            return latest_folder
-        else:
-            return None
-        
 class Face_Register:
     def __init__(self):
 
@@ -209,15 +198,12 @@ class Face_Register:
         else:
             print("Connection to the database failed.")
 
-    
-    
     def extract_feature(self):
         logging.basicConfig(level=logging.INFO)
-        # person_list = os.listdir("data/data_faces_from_camera/")
-        latest_folder = get_latest_folder(path_images_from_camera)
-                
+        person_list = os.listdir("data/data_faces_from_camera/")
+        
         # get mean feature vector of identified person 
-        features_mean_personX = self.return_features_mean_personX(path_images_from_camera + latest_folder)
+        features_mean_personX = self.return_features_mean_personX(path_images_from_camera + person_list[-1])
 
         # now, save features_mean_personX into database
         self.update_feature_vector(self.input_id_number, features_mean_personX)
@@ -298,9 +284,9 @@ class Face_Register:
         tk.Label(self.frame_right_info,
                  font=self.font_step_title,
                  text="Step 1: Clear face photos").grid(row=5, column=0, columnspan=2, sticky=tk.W, padx=5, pady=20)
-        # tk.Button(self.frame_right_info,
-        #           text='Clear',
-        #           command=self.GUI_clear_data).grid(row=6, column=0, columnspan=3, sticky=tk.W, padx=5, pady=2)
+        tk.Button(self.frame_right_info,
+                  text='Clear',
+                  command=self.GUI_clear_data).grid(row=6, column=0, columnspan=3, sticky=tk.W, padx=5, pady=2)
 
         # Step 2: Input name and create folders for face
         tk.Label(self.frame_right_info,

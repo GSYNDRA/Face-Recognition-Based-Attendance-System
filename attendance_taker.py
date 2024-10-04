@@ -109,7 +109,29 @@ class Face_Recognizer:
             logging.warning("Please run 'get_faces_from_camera.py' "
                             "and 'features_extraction_to_csv.py' before 'face_reco_from_camera.py'")
             return 0
+    def save_recognized_face(self, img, person_name):
+        # Get the current date
+        current_date = datetime.datetime.now().strftime("%Y_%m_%d")
 
+        # Create a directory for the person if it doesn't exist
+        person_folder = f"data/recognized_faces_check_in/{person_name}"
+        if not os.path.exists(person_folder):
+            os.makedirs(person_folder)
+
+        # Create the path for the image file with the name as {person_name}_realtime_checkin_{current_date}.png
+        file_path = f"{person_folder}/{person_name}_realtime_checkin_{current_date}.png"
+
+        # Check if the image for the current date already exists
+        if not os.path.exists(file_path):
+            # Save the frame
+            cv2.imwrite(file_path, img)
+            print(f"Saved {person_name}'s face for {current_date}")
+        else:
+            print(f"{person_name}'s face for {current_date} has already been saved.")
+
+        # Return the file path (whether it was saved or not)
+        return file_path
+    
     def update_fps(self):
         now = time.time()
         # Refresh fps per second
@@ -316,6 +338,9 @@ class Face_Recognizer:
                                 print(type(self.face_name_known_list[similar_person_num]))
                                 print(nam)
                                 self.attendance(nam)
+                                # Save the first frame when a person is recognized
+                                saved_image_path = self.save_recognized_face(img_rd, nam)
+                                print(f"Saved image to: {saved_image_path}")
                             else:
                                 logging.debug("  Face recognition result: Unknown person")
 
