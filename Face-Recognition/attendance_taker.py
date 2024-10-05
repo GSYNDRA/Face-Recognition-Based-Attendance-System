@@ -105,7 +105,7 @@ class Face_Recognizer:
         connection = self.connect_to_database()
         if connection:
             cursor = connection.cursor()
-            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 3"
+            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 6"
             # Execute the query
             cursor.execute(query)
             
@@ -367,7 +367,6 @@ class Face_Recognizer:
                     self.current_frame_face_feature_list = []
                     self.reclassify_interval_cnt += 1
                     
-
                     # 6.2.1  Face cnt decreases: 1->0, 2->1, ...
                     if self.current_frame_face_cnt == 0:
                         logging.debug("  / No faces in this frame!!!")
