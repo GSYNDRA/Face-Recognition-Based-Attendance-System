@@ -105,7 +105,7 @@ class Face_Recognizer:
         connection = self.connect_to_database()
         if connection:
             cursor = connection.cursor()
-            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 6"
+            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 2"
             # Execute the query
             cursor.execute(query)
             
@@ -171,74 +171,175 @@ class Face_Recognizer:
         
             
         
-    def get_ongoing_journey_id(self,connection, bus_id):
+    # def get_ongoing_journey_id(self,connection, bus_id):
+    #     cursor = connection.cursor()
+    #     query = "SELECT journey_id FROM Journey WHERE status = 'ongoing' AND bus_id = %s"
+    #     cursor.execute(query, (bus_id,))
+    #     journey_id = cursor.fetchone()
+    #     cursor.close()
+    #     if journey_id:
+    #         return int(journey_id[0])  
+    #     else:
+    #         return None  
+        
+    # def get_attendance_by_student_id(self, connection, student_id, journey_id):
+    #     cursor = connection.cursor()
+    #     query = "SELECT attendance_id, status FROM Attendance WHERE journey_id = %s AND student_id = %s"
+    #     cursor.execute(query, (journey_id, student_id))
+    #     attendance_id = cursor.fetchone()
+    #     cursor.close()
+    #     if attendance_id:
+    #         return attendance_id  
+    #     else:
+    #         return None 
+    
+    # def get_info_by_student_id(self, student_id):
+    #     connection = self.connect_to_database()
+    #     if connection:
+    #         cursor = connection.cursor()
+    #         query = "SELECT name, avatar FROM Student WHERE student_id = %s"
+    #         cursor.execute(query, (student_id,))
+    #         infoStudent = cursor.fetchone()
+    #         cursor.close()
+    #         connection.close()
+    #         if infoStudent:
+    #             return infoStudent  
+    #         else:
+    #             return None 
+        
+    # def create_new_attendance(self, connection, student_id, journey_id, status, boarded, boarded_image):
+    #     cursor = connection.cursor()
+    #     query = """
+    #     INSERT INTO Attendance (student_id, journey_id, status, boarded, boarded_image)
+    #     VALUES (%s, %s, %s, %s, %s)
+    #     """
+    #     cursor.execute(query, (student_id, journey_id, status, boarded, boarded_image))
+    #     connection.commit()
+    #     cursor.close()
+
+    # def update_attendance_status(self, connection, attendance_id, status, time, path):
+    #     cursor = connection.cursor()
+    #     query = """
+    #     UPDATE Attendance
+    #     SET status = %s, alighted = %s, alighted_image = %s
+    #     WHERE attendance_id = %s
+    #     """
+    #     cursor.execute(query, (status, time, path, attendance_id))
+    #     connection.commit()
+    #     cursor.close()
+
+
+    # def clear_alighted_info(self, connection, attendance_id, status, time, path):
+    #     cursor = connection.cursor()
+    #     query = """
+    #     UPDATE Attendance
+    #     SET status = %s, boarded= %s, boarded_image= %s, alighted = NULL, alighted_image = NULL
+    #     WHERE attendance_id = %s
+    #     """
+    #     cursor.execute(query, (status, time, path, attendance_id))
+    #     connection.commit()
+    #     cursor.close()
+
+    # # insert data in database
+    # def attendance(self, time, id, path):
+    #     connection = self.connect_to_database()
+    #     if connection:
+    #         journey_id = self.get_ongoing_journey_id(connection, 2)
+    #         print(journey_id)
+    #         if not journey_id:
+    #             print("No active journey found.")
+    #             return
+    #         attendance_id = self.get_attendance_by_student_id(connection,id,journey_id)
+    #         if not attendance_id:
+    #             status = 'boarded'
+    #             self.create_new_attendance(connection, id, journey_id, status, time, path)
+    #         elif attendance_id[1] == 'boarded':
+    #             status = 'alighted'
+    #             self.update_attendance_status(connection, attendance_id[0], status, time, path)
+    #         elif attendance_id[1] == 'alighted':
+    #             status = 'boarded'
+    #             self.clear_alighted_info(connection, attendance_id[0], status, time, path)
+    #         connection.close()
+    #     else:
+    #         logging.warning("fail to connect")
+
+    def get_ongoing_journey_id(self, connection, bus_id):
+        # Truy vấn database để lấy journey ID
         cursor = connection.cursor()
         query = "SELECT journey_id FROM Journey WHERE status = 'ongoing' AND bus_id = %s"
         cursor.execute(query, (bus_id,))
         journey_id = cursor.fetchone()
-        cursor.close()
+        # Trả về journey ID dưới dạng int nếu tìm thấy, ngược lại trả về None
+        # Kiểm tra nếu journey_id không phải là None trước khi truy cập phần tử [0]
         if journey_id:
-            return int(journey_id[0])  
+            return int(journey_id[0])  # Trả về journey ID dưới dạng int nếu có giá trị
         else:
-            return None  
+            return None  # Ngược lại trả về None
         
     def get_attendance_by_student_id(self, connection, student_id, journey_id):
         cursor = connection.cursor()
         query = "SELECT attendance_id, status FROM Attendance WHERE journey_id = %s AND student_id = %s"
         cursor.execute(query, (journey_id, student_id))
         attendance_id = cursor.fetchone()
-        cursor.close()
+        # Trả về journey ID dưới dạng int nếu tìm thấy, ngược lại trả về None
+        # Kiểm tra nếu journey_id không phải là None trước khi truy cập phần tử [0]
         if attendance_id:
-            return attendance_id  
+            print(attendance_id)
+            return attendance_id  # Trả về journey ID dưới dạng int nếu có giá trị
         else:
-            return None 
-    
-    def get_info_by_student_id(self, student_id):
-        connection = self.connect_to_database()
-        if connection:
-            cursor = connection.cursor()
-            query = "SELECT name, avatar FROM Student WHERE student_id = %s"
-            cursor.execute(query, (student_id,))
-            infoStudent = cursor.fetchone()
-            cursor.close()
-            connection.close()
-            if infoStudent:
-                return infoStudent  
-            else:
-                return None 
+            return None  # Ngược lại trả về None
         
-    def create_new_attendance(self, connection, student_id, journey_id, status, boarded, boarded_image):
+    def create_new_attendance(self, connection, student_id, student_name, journey_id, status, boarded, image):
         cursor = connection.cursor()
-        query = """
-        INSERT INTO Attendance (student_id, journey_id, status, boarded, boarded_image)
-        VALUES (%s, %s, %s, %s, %s)
+        insert_attendance_query = """
+        INSERT INTO Attendance (student_id, journey_id, status, boarded)
+        VALUES (%s, %s, %s, %s)
         """
-        cursor.execute(query, (student_id, journey_id, status, boarded, boarded_image))
-        connection.commit()
-        cursor.close()
 
-    def update_attendance_status(self, connection, attendance_id, status, time, path):
+        cursor.execute(insert_attendance_query, (student_id, journey_id, status, boarded))
+        attendance_id = cursor.lastrowid
+        insert_noti_query = """
+
+        INSERT INTO Notification (attendance_id, time_stamp, message, image, status)
+        VALUES (%s, %s, %s, %s, 'common')
+        """
+        cursor.execute(insert_noti_query, (attendance_id, boarded, f"{student_name} has boarded the bus", image))
+        connection.commit()
+
+    def update_attendance_status(self, connection, student_name, attendance_id, status, time, image):
+        cursor = connection.cursor()
+        update_attendance_query = """
+        UPDATE Attendance
+        SET status = %s, alighted = %s
+        WHERE attendance_id = %s
+        """
+        cursor.execute(update_attendance_query, (status, time, attendance_id))
+        connection.commit()
+        
+        insert_noti_query = """
+        INSERT INTO Notification (attendance_id, time_stamp, message, image, status)
+        VALUES (%s, %s, %s, %s, 'common')
+        """
+        cursor.execute(insert_noti_query, (attendance_id, time, f"{student_name} has alighted the bus", image))
+        connection.commit()
+
+
+    def clear_alighted_info(self, connection, student_name, attendance_id, status, time, image):
         cursor = connection.cursor()
         query = """
         UPDATE Attendance
-        SET status = %s, alighted = %s, alighted_image = %s
+        SET status = %s, boarded= %s, alighted = NULL
         WHERE attendance_id = %s
         """
-        cursor.execute(query, (status, time, path, attendance_id))
-        connection.commit()
-        cursor.close()
+        cursor.execute(query, (status, time, attendance_id))
 
-
-    def clear_alighted_info(self, connection, attendance_id, status, time, path):
-        cursor = connection.cursor()
-        query = """
-        UPDATE Attendance
-        SET status = %s, boarded= %s, boarded_image= %s, alighted = NULL, alighted_image = NULL
-        WHERE attendance_id = %s
+        insert_noti_query = """
+        INSERT INTO Notification (attendance_id, time_stamp, message, image, status)
+        VALUES (%s, %s, %s, %s, 'common')
         """
-        cursor.execute(query, (status, time, path, attendance_id))
+        cursor.execute(insert_noti_query, (attendance_id, time, f"{student_name} has boarded the bus", image))
+
         connection.commit()
-        cursor.close()
 
     # insert data in database
     def attendance(self, time, id, path):
@@ -250,18 +351,35 @@ class Face_Recognizer:
                 print("No active journey found.")
                 return
             attendance_id = self.get_attendance_by_student_id(connection,id,journey_id)
+            name = self.get_name_by_student_id(id)
+            print(name)
+            # print(attendance_id[0], attendance_id[1])
             if not attendance_id:
                 status = 'boarded'
-                self.create_new_attendance(connection, id, journey_id, status, time, path)
+                self.create_new_attendance(connection, id, name, journey_id, status, time, path)
             elif attendance_id[1] == 'boarded':
                 status = 'alighted'
-                self.update_attendance_status(connection, attendance_id[0], status, time, path)
+                self.update_attendance_status(connection, name, attendance_id[0], status, time, path)
             elif attendance_id[1] == 'alighted':
                 status = 'boarded'
-                self.clear_alighted_info(connection, attendance_id[0], status, time, path)
-            connection.close()
+                self.clear_alighted_info(connection, name, attendance_id[0], status, time, path)
+
         else:
             logging.warning("fail to connect")
+
+    def get_name_by_student_id(self, student_id):
+        connection = self.connect_to_database()
+        if connection:
+            cursor = connection.cursor()
+            query = "SELECT name FROM Student WHERE student_id = %s"
+            cursor.execute(query, (student_id,))
+            name_student = cursor.fetchone()
+            cursor.close()
+            connection.close()
+            if name_student:
+                return name_student[0]
+            else:
+                return None 
 
 
     def save_recognized_face(self, img, person_name):
