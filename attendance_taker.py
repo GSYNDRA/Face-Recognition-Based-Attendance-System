@@ -28,7 +28,7 @@ table_name = "attendance"
 create_table_sql = f"CREATE TABLE IF NOT EXISTS {table_name} (name TEXT, time TEXT, date DATE, UNIQUE(name, date))"
 cursor.execute(create_table_sql)
 
-folderModePath = 'Resources/Modes'
+folderModePath = 'resources/modes'
 modePathList = os.listdir(folderModePath)
 
 
