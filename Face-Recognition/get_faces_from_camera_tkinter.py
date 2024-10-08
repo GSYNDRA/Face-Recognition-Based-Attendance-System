@@ -389,31 +389,6 @@ class Face_Register:
         self.ss_cnt = 0  #  Clear the cnt of screen shots
         self.face_folder_created_flag = True  # Face folder already created
 
-    # def save_current_face(self):
-    #     if self.face_folder_created_flag:
-    #         if self.current_frame_faces_cnt == 1:
-    #             if not self.out_of_range_flag:
-    #                 self.ss_cnt += 1
-    #                 #  Create blank image according to the size of face detected
-    #                 self.face_ROI_image = np.zeros((int(self.face_ROI_height * 2), self.face_ROI_width * 2, 3),
-    #                                                np.uint8)
-    #                 for ii in range(self.face_ROI_height * 2):
-    #                     for jj in range(self.face_ROI_width * 2):
-    #                         self.face_ROI_image[ii][jj] = self.current_frame[self.face_ROI_height_start - self.hh + ii][
-    #                             self.face_ROI_width_start - self.ww + jj]
-    #                 self.log_all["text"] = "\"" + self.current_face_dir + "/img_face_" + str(
-    #                     self.ss_cnt) + ".jpg\"" + " saved!"
-    #                 self.face_ROI_image = cv2.cvtColor(self.face_ROI_image, cv2.COLOR_BGR2RGB)
-
-    #                 cv2.imwrite(self.current_face_dir + "/img_face_" + str(self.ss_cnt) + ".jpg", self.face_ROI_image)
-    #                 logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
-    #                              str(self.current_face_dir), str(self.ss_cnt) + ".jpg")
-    #             else:
-    #                 self.log_all["text"] = "Please do not out of range!"
-    #         else:
-    #             self.log_all["text"] = "No face in current frame!"
-    #     else:
-    #         self.log_all["text"] = "Please run step 2!"
 
     def save_current_face(self):
         if not self.face_folder_created_flag:
