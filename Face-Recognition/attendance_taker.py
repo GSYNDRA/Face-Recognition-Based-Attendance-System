@@ -23,7 +23,7 @@ predictor = dlib.shape_predictor('data/data_dlib/shape_predictor_68_face_landmar
 # Dlib Resnet Use Dlib resnet50 model to get 128D face descriptor
 face_reco_model = dlib.face_recognition_model_v1("data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
 
-folderModePath = 'Resources/Modes'
+folderModePath ='Resources/Modes'
 modePathList = os.listdir(folderModePath)
 
 
