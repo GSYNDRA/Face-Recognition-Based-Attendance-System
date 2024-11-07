@@ -61,8 +61,8 @@
         <hr>
     
         <form action="/attendance" method="POST" id="attn-form">
-            <label for="selected_date">Select Date: </label>
-            <input type="date" id="selected_date" name="selected_date" required value="{{ selected_date }}">
+            <!-- <label for="selected_date">Select Date: </label>
+            <input type="date" id="selected_date" name="selected_date" required value="{{ selected_date }}"> -->
             <button type="submit" class="btn btn-outline-success">Show attendance</button>
         </form>
 
@@ -77,15 +77,27 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Time</th>
+                    <th scope="col">attendance_id</th>
+                    <th scope="col">student_id</th>
+                    <th scope="col">journey_id</th>
+                    <th scope="col">boarded</th>
+                    <th scope="col">alighted</th>
+                    <th scope="col">boarded_image</th>
+                    <th scope="col">alighted_image</th>
+                    <th scope="col">status</th>
                 </tr>
             </thead>
             <tbody>
-                {% for name, time in attendance_data %}
+                {% for row in attendance_data %}
                 <tr>
-                    <td>{{ name }}</td>
-                    <td>{{ time }}</td>
+                    <td>{{ row[0] }}</td> <!-- ID -->
+                    <td>{{ row[1] }}</td> <!-- Journey ID -->
+                    <td>{{ row[2] }}</td> <!-- Name -->
+                    <td>{{ row[3] }}</td> <!-- Time -->
+                    <td>{{ row[4] }}</td> <!-- ID -->
+                    <td>{{ row[5] }}</td> <!-- Journey ID -->
+                    <td>{{ row[6] }}</td> <!-- Name -->
+                    <td>{{ row[7] }}</td> <!-- Time -->
                 </tr>
                 {% endfor %}
             </tbody>

@@ -94,7 +94,7 @@ class Face_Recognizer:
             )
             # Database connection configuration
             if connection.is_connected():
-                print("Success! Connected to MySQL database.")
+                # print("Success! Connected to MySQL database.")
                 return connection
         except Error as e:
             print(f"fail to connect with MySQL database: {e}")
@@ -105,7 +105,7 @@ class Face_Recognizer:
         connection = self.connect_to_database()
         if connection:
             cursor = connection.cursor()
-            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 2"
+            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 1"
             # Execute the query
             cursor.execute(query)
             
@@ -193,19 +193,19 @@ class Face_Recognizer:
     #     else:
     #         return None 
     
-    # def get_info_by_student_id(self, student_id):
-    #     connection = self.connect_to_database()
-    #     if connection:
-    #         cursor = connection.cursor()
-    #         query = "SELECT name, avatar FROM Student WHERE student_id = %s"
-    #         cursor.execute(query, (student_id,))
-    #         infoStudent = cursor.fetchone()
-    #         cursor.close()
-    #         connection.close()
-    #         if infoStudent:
-    #             return infoStudent  
-    #         else:
-    #             return None 
+    def get_info_by_student_id(self, student_id):
+        connection = self.connect_to_database()
+        if connection:
+            cursor = connection.cursor()
+            query = "SELECT name, avatar FROM Student WHERE student_id = %s"
+            cursor.execute(query, (student_id,))
+            infoStudent = cursor.fetchone()
+            cursor.close()
+            connection.close()
+            if infoStudent:
+                return infoStudent  
+            else:
+                return None 
         
     # def create_new_attendance(self, connection, student_id, journey_id, status, boarded, boarded_image):
     #     cursor = connection.cursor()
@@ -284,7 +284,7 @@ class Face_Recognizer:
         # Trả về journey ID dưới dạng int nếu tìm thấy, ngược lại trả về None
         # Kiểm tra nếu journey_id không phải là None trước khi truy cập phần tử [0]
         if attendance_id:
-            print(attendance_id)
+            # print(attendance_id)
             return attendance_id  # Trả về journey ID dưới dạng int nếu có giá trị
         else:
             return None  # Ngược lại trả về None
@@ -313,9 +313,8 @@ class Face_Recognizer:
         SET status = %s, alighted = %s
         WHERE attendance_id = %s
         """
-        cursor.execute(update_attendance_query, (status, time, attendance_id))
-        connection.commit()
-        
+        cursor.execute(update_attendance_query, (status, time, attendance_id))        
+
         insert_noti_query = """
         INSERT INTO Notification (attendance_id, time_stamp, message, image, status)
         VALUES (%s, %s, %s, %s, 'common')
@@ -340,46 +339,47 @@ class Face_Recognizer:
         cursor.execute(insert_noti_query, (attendance_id, time, f"{student_name} has boarded the bus", image))
 
         connection.commit()
+    
+    def get_name_by_student_id(self, connection, student_id):
+        cursor = connection.cursor()
+        query = "SELECT name FROM Student WHERE student_id = %s"
+        cursor.execute(query, (student_id,))
+        name_student = cursor.fetchone()
+        if name_student:
+            return name_student[0]
+        else:
+            return None 
 
     # insert data in database
     def attendance(self, time, id, path):
         connection = self.connect_to_database()
         if connection:
             journey_id = self.get_ongoing_journey_id(connection, 2)
-            print(journey_id)
+            # print(journey_id)
             if not journey_id:
                 print("No active journey found.")
                 return
             attendance_id = self.get_attendance_by_student_id(connection,id,journey_id)
-            name = self.get_name_by_student_id(id)
-            print(name)
+            # print(name)
             # print(attendance_id[0], attendance_id[1])
+            name = self.get_name_by_student_id(connection, id)
             if not attendance_id:
                 status = 'boarded'
                 self.create_new_attendance(connection, id, name, journey_id, status, time, path)
+                print("creating successfully")
             elif attendance_id[1] == 'boarded':
                 status = 'alighted'
                 self.update_attendance_status(connection, name, attendance_id[0], status, time, path)
+                print("updating successfully")
             elif attendance_id[1] == 'alighted':
                 status = 'boarded'
                 self.clear_alighted_info(connection, name, attendance_id[0], status, time, path)
+                print("clearing successfully")
 
         else:
             logging.warning("fail to connect")
 
-    def get_name_by_student_id(self, student_id):
-        connection = self.connect_to_database()
-        if connection:
-            cursor = connection.cursor()
-            query = "SELECT name FROM Student WHERE student_id = %s"
-            cursor.execute(query, (student_id,))
-            name_student = cursor.fetchone()
-            cursor.close()
-            connection.close()
-            if name_student:
-                return name_student[0]
-            else:
-                return None 
+    
 
 
     def save_recognized_face(self, img, person_name):
@@ -545,6 +545,7 @@ class Face_Recognizer:
                             current_time = datetime.datetime.now()
                             self.last_student_id = self.current_student_id
                             print(self.current_student_id, self.last_student_id)
+
 
                             saved_image_path = self.save_recognized_face(img_rd, f"{self.current_student_id}_{current_time.strftime("%Y_%m_%d_%H_%M_%S")}")
 
