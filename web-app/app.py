@@ -37,7 +37,7 @@ def attendance():
     connection = connect_to_database()
     cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM Attendance WHERE journey_id = 51")
+    cursor.execute("SELECT * FROM Attendance WHERE journey_id = 16")
     attendance_data = cursor.fetchall()
 
     cursor.close()

@@ -18,10 +18,10 @@ import base64
 detector = dlib.get_frontal_face_detector()
 
 # Dlib landmark / Get face landmarks
-predictor = dlib.shape_predictor('data/data_dlib/shape_predictor_68_face_landmarks.dat')
+predictor = dlib.shape_predictor('data_dlib/shape_predictor_68_face_landmarks.dat')
 
 # Dlib Resnet Use Dlib resnet50 model to get 128D face descriptor
-face_reco_model = dlib.face_recognition_model_v1("data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
+face_reco_model = dlib.face_recognition_model_v1("data_dlib/dlib_face_recognition_resnet_model_v1.dat")
 
 folderModePath ='resources/modes'
 modePathList = os.listdir(folderModePath)
