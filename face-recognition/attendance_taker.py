@@ -422,13 +422,15 @@ class Face_Recognizer:
                 # 2.  Detect faces for frame X
                 faces = detector(img_rd, 0)
                 if(len(faces) > 0):
-                    bbox = (55+faces[0].left(), 162+faces[0].top(), faces[0].right() - faces[0].left(), faces[0].bottom() - faces[0].top())
-                    img_rd = cvzone.cornerRect(img_rd, bbox, rt=0, colorR=(255, 255, 255))
-                    if (55 <= bbox[0] <= 55 + 640 - bbox[2] and  # Kiểm tra cạnh trái và phải (x trong phạm vi và không vượt quá cạnh phải)
-                    162 <= bbox[1] <= 162 + 480 - bbox[3] and # Kiểm tra cạnh trên và dưới (y trong phạm vi và không vượt quá cạnh dưới)
-                    bbox[2] <= 640 and                        # Chiều rộng của bbox không vượt quá chiều rộng của camera
-                    bbox[3] <= 480):                          # Chiều cao của bbox không vượt quá chiều cao của camera
-                        cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
+                    for face in faces:
+                        bbox = (55+face.left(), 162+face.top(), face.right() - face.left(), face.bottom() - face.top())
+                        img_rd = cvzone.cornerRect(img_rd, bbox, rt=0, colorR=(255, 255, 255))
+                        if (55 <= bbox[0] <= 55 + 640 - bbox[2] and  # Kiểm tra cạnh trái và phải (x trong phạm vi và không vượt quá cạnh phải)
+                        162 <= bbox[1] <= 162 + 480 - bbox[3] and # Kiểm tra cạnh trên và dưới (y trong phạm vi và không vượt quá cạnh dưới)
+                        bbox[2] <= 640 and                        # Chiều rộng của bbox không vượt quá chiều rộng của camera
+                        bbox[3] <= 480):                          # Chiều cao của bbox không vượt quá chiều cao của camera
+                            cvzone.cornerRect(self.imgBackground, bbox, rt=0, colorR=(255, 255, 255))
+              
 
                 # 3.  Update cnt for faces in frames
                 self.last_frame_face_cnt = self.current_frame_face_cnt
@@ -440,6 +442,8 @@ class Face_Recognizer:
                 # 5.  update frame centroid list
                 self.last_frame_face_centroid_list = self.current_frame_face_centroid_list
                 self.current_frame_face_centroid_list = []
+                
+                
                 
 
                 # 6.1  self.current_student_id == self.last_student_id
