@@ -105,7 +105,7 @@ class Face_Recognizer:
         connection = self.connect_to_database()
         if connection:
             cursor = connection.cursor()
-            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 1"
+            query = "SELECT feature_vector FROM Student ORDER BY student_id ASC LIMIT 2"
             # Execute the query
             cursor.execute(query)
             

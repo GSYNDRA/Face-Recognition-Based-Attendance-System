@@ -354,6 +354,7 @@ class Face_Register:
                 person_order = person.split('_')[1].split('_')[0]
                 person_num_list.append(int(person_order))
             self.existing_faces_cnt = max(person_num_list)
+            print(self.existing_faces_cnt)
 
         # Start from person_1
         else:
@@ -412,16 +413,16 @@ class Face_Register:
                 self.face_ROI_image[ii][jj] = self.current_frame[self.face_ROI_height_start - self.hh + ii][
                     self.face_ROI_width_start - self.ww + jj]
         
-        # Cập nhật log để hiển thị đường dẫn của ảnh đã lưu
+        # update the log to display the route of the saved images
         self.log_all["text"] = "\"" + self.current_face_dir + "/img_face_" + str(self.ss_cnt) + ".jpg\"" + " saved!"
         
-        # Chuyển đổi hình ảnh từ BGR sang RGB
+        # convert the image from BGR to RGB
         self.face_ROI_image = cv2.cvtColor(self.face_ROI_image, cv2.COLOR_BGR2RGB)
         
-        # Lưu hình ảnh vào thư mục
+        # Save the images into the folder
         cv2.imwrite(self.current_face_dir + "/img_face_" + str(self.ss_cnt) + ".jpg", self.face_ROI_image)
         
-        # Ghi lại thông tin lưu ảnh vào log
+        # note the saved images into log
         logging.info("%-40s %s/img_face_%s.jpg", "Save into：", str(self.current_face_dir), str(self.ss_cnt) + ".jpg")
 
 
